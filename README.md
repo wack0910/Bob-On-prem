@@ -6,7 +6,7 @@ IBM Bob 2.0.0의 온라인 OpenShift 설치, 외부 OpenAI 호환 vLLM 연결, W
 
 대상 모델은 `Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8`, 사용자 확인 환경은 **L40S 1장 / vLLM 0.31.0**입니다. 최초 설치의 Laguna 구성은 과거 성공 이력으로 보존합니다. Qwen metadata가 Bob alias table에서 거부된 장애와, 기존 metadata를 유지하는 임시 호환 예제를 문서화했습니다.
 
-예제는 실서버에서 검증한 최종 설정이 아닙니다. 최종 실행 명령과 우회 tuple 전문을 확보하지 못했으므로, [자료와 확인 상태](docs/sources-and-status.md)에 확인 사실과 제안값을 구분했습니다.
+사용자가 전체 vLLM 실행 YAML과 Bob 작업 로그·화면을 제공해 현재값을 반영했습니다. **memory 0.92 / sequences 2 / batch tokens 4096 / eager true**가 현재 구성입니다. 짧은 작업의 추론·도구 경로는 관찰됐으며 128K 경계와 두 긴 요청 동시 처리는 아직 검증되지 않았습니다. 최종 Bob 호환 metadata tuple은 미확인입니다. [자료와 확인 상태](docs/sources-and-status.md)에 근거와 범위를 기록합니다.
 
 ## 문서
 
@@ -17,6 +17,7 @@ IBM Bob 2.0.0의 온라인 OpenShift 설치, 외부 OpenAI 호환 vLLM 연결, W
 - [IDE 연결 가이드](docs/ide-setup.md): Windows IDE 설치, 신뢰할 인증서 등록, Gateway URL, 로그인과 연결 확인
 - [모델 및 긴 컨텍스트 검증](docs/model-validation.md): 모델 등록, 실제 추론 확인, 긴 입력 테스트 방법
 - [트러블슈팅](docs/troubleshooting.md): 알려진 모델 alias 시작 오류와 일반 진단 순서
+- [실제 Qwen 실행 관찰](docs/observed-qwen-run.md): 사용자 제공 설정·생성 속도·KV/prefix 지표·IDE context와 실행 대기 해석
 - [자료와 확인 상태](docs/sources-and-status.md): 원본 자료, 버전별 공식 근거, 확인값/미검증값 구분
 
 ## 모델 변경 시 읽는 순서

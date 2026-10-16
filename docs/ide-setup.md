@@ -53,3 +53,5 @@ Bob Gateway 주소가 그대로라면 Laguna에서 Qwen으로 변경해도 `gate
 정상 로그인은 IDE와 IDP 연결만 확인합니다. 모델 추론 성공은 별도로 검증해야 합니다.
 
 Qwen 변경 후에는 [모델 검증](model-validation.md)에 따라 짧은 채팅 외에 코드 작업, 승인된 테스트 파일을 사용하는 도구 호출, streaming 응답도 확인합니다.
+
+사용자 제공 화면의 `16.4k / 114.7k`는 [context 표시 해석](observed-qwen-run.md)을 참고합니다. IDE가 Python 명령을 실행 중인데 같은 시점의 vLLM이 idle이면 터미널 프로그램의 입력/종료 대기도 확인합니다.

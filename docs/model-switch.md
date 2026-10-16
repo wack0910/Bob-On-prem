@@ -6,12 +6,12 @@
 |---|---|
 | 변경할 실제 모델 | `Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8` |
 | 모델 서버 | 사용자 확인: vLLM `0.31.0`, NVIDIA L40S 1장 |
-| 컨텍스트 목표 | 사용자 보고: 128K로 상향. 이 문서의 목표값은 총 `131072` tokens이며 실측 용량은 별도 검증 |
+| 컨텍스트 설정 | 제공된 vLLM YAML: 총 `131072` tokens. 짧은 작업 로그 확인, 경계 길이 검증은 별도 |
 | Bob | 설치 문서: 2.0.0. 장애 로그의 inference 컴포넌트 버전: 1.26.7 |
 | 관찰된 문제 | `qwen / qwen3-coder / 30b-a3b` 조합이 해당 Bob alias table에 없어 시작 실패 |
 | 임시 호환 예제 | 기존 성공 구성의 `poolside / laguna / s2.1` metadata를 유지하고 실제 backend만 Qwen으로 변경 |
 
-최종 vLLM 실행 명령 전문과 최종 적용된 호환 metadata 조합은 현재 확보한 자료에 없습니다. 따라서 아래 YAML은 설명용 후보이며, 현재 실서버의 설정값 또는 Qwen 우회 성공이 확인된 구성이라고 표시하지 않습니다. 사실과 예제의 범위는 [자료와 확인 상태](sources-and-status.md)를 참고하세요.
+vLLM 전체 실행 구성은 후속 메시지로 제공받아 [설정 가이드](vllm-configuration.md)에 반영했습니다. Bob 화면과 서버 로그에서 추론·도구 경로가 관찰됐지만, 현재 적용된 Bob metadata tuple은 제공되지 않았습니다. 따라서 아래 **Bob YAML의 호환 tuple**은 설명용 후보이며 실제 적용값이라고 표시하지 않습니다. [관찰 결과](observed-qwen-run.md)와 [자료의 확인 상태](sources-and-status.md)를 참고하세요.
 
 ## 2. 변경해야 하는 세 계층
 

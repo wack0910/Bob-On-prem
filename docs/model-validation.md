@@ -4,6 +4,8 @@
 
 대상은 `Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8`, 사용자 확인 환경은 L40S 1장과 vLLM 0.31.0입니다. 아래는 실제 서버에서 수행할 절차이며 이 문서 작성 중 클러스터/GPU 테스트를 실행한 결과가 아닙니다. 설정 변경은 [모델 변경](model-switch.md)과 [롤아웃](deployment-rollout.md) 순서를 따릅니다.
 
+사용자 후속 자료에서 실제 YAML과 짧은 에이전트 작업의 로그·화면을 확보했습니다. [관찰 기록](observed-qwen-run.md)을 기준으로 짧은 추론·도구 경로와 최대 context/동시성 검증을 구별합니다.
+
 ## 2. vLLM과 Bob 정상 기동
 
 vLLM 시작 로그에서 실제 checkpoint, dtype/quantization, `max_model_len`, KV capacity를 확인합니다. Bob은 다음 명령으로 상태를 확인합니다.

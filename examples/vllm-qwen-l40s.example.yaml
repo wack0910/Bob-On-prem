@@ -1,20 +1,28 @@
-# vLLM 0.31.0, one L40S: 128K trial profile, not a measured production config.
-# Replace paths/bind address in a private copy and verify capacity and quality.
-model: "<LOCAL_QWEN_FP8_CHECKPOINT_DIRECTORY>"
-served-model-name: "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8"
+# User-provided applied config: vLLM 0.31.0, one L40S.
+# Bind address sanitized. A short Bob agent task was observed; 128K is untested.
+model: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+served-model-name: Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8
+
 host: "<BIND_ADDRESS>"
 port: 8000
 
 dtype: auto
-tensor-parallel-size: 1
-max-model-len: 131072
-gpu-memory-utilization: 0.90
 kv-cache-dtype: fp8
-max-num-seqs: 1
-max-num-batched-tokens: 2048
+tensor-parallel-size: 1
+pipeline-parallel-size: 1
+gpu-memory-utilization: 0.92
+
+max-model-len: 131072
+language-model-only: true
+
+max-num-seqs: 2
+max-num-batched-tokens: 4096
 enable-chunked-prefill: true
-enable-prefix-caching: true
 
 enable-auto-tool-choice: true
 tool-call-parser: qwen3_xml
+enable-prefix-caching: true
+
 generation-config: vllm
+
+enforce-eager: true

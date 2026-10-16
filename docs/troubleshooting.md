@@ -73,4 +73,6 @@ oc get route -n ibm-bob
 | UI가 Laguna로 표시됨 | 임시 호환 metadata가 노출됨 | 실제 요청 Qwen ID를 확인하고 표시/계량 차이를 기록 |
 | rollout undo 뒤에도 같은 오류 | 같은 ConfigMap 내용이 복구되지 않음 | 이전 설정 원본과 template/image를 함께 복원하고 재시작 |
 
-128K는 이 구성에서 검토하는 총 context 목표입니다. 모델 자체 최대 길이나 한 장의 GPU가 보장하는 길이를 의미하지 않습니다. [검증 가이드](model-validation.md)의 직접 API→Bob→IDE→긴 입력 순서로 실패 구간을 좁힙니다.
+실제 달력 작업에서 관찰된 생성 속도·prefix cache·IDE 실행 대기 해석은 [실행 관찰](observed-qwen-run.md)을 참고합니다. `python calendar.py`의 입력 대기나 표준 라이브러리 이름 충돌은 코드를 확인해 진단하며 서버 추론 실패로 단정하지 않습니다.
+
+128K는 이 구성의 제공된 총 context 설정값입니다. 모델 자체 최대 길이나 한 장의 GPU가 보장하는 길이를 의미하지 않습니다. [검증 가이드](model-validation.md)의 직접 API→Bob→IDE→긴 입력 순서로 실패 구간을 좁힙니다.
