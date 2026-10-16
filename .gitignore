@@ -1,0 +1,21 @@
+# Local deployment configuration may contain credentials or private endpoints.
+config.yaml
+config-idp.yaml
+my-idp.yaml
+model-gateway.yaml
+*.secret.yaml
+*.secrets.yaml
+
+# Certificates and private keys must be managed outside this repository.
+*.crt
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Local credentials and deployment artifacts.
+.env
+.env.*
+!.env.example
+ibm-bob-install-*.tgz
+work/
