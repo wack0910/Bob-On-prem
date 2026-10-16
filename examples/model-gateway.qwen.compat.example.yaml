@@ -1,0 +1,34 @@
+# Documentation template: replace placeholders in a private deployment copy.
+# This is an unverified compatibility mapping, not native Qwen registration.
+# The recognized metadata triple must be checked against the deployed Bob version.
+x-providers:
+  inference_service: &qwen_backend
+    openai_compatible:
+      model: "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8"
+      base_url: "<VLLM_BASE_URL_WITHOUT_V1>"
+      api_key: "<MODEL_API_KEY_OR_APPROVED_SENTINEL>"
+    model_info:
+      exposed: true
+      # Compatibility metadata from the historical Laguna configuration.
+      # The actual endpoint model remains Qwen, as specified above.
+      provider: poolside
+      family: laguna
+      version: "s2.1"
+      max_input_tokens: 114688
+      max_output_tokens: 8192
+      supports_vision: false
+      mode: chat
+
+models:
+  - <<: *qwen_backend
+    model_name: premium-ide
+  - <<: *qwen_backend
+    model_name: security
+  - <<: *qwen_backend
+    model_name: background
+
+routers:
+  - name: router
+    strategy: static
+    static:
+      default_model: premium-ide

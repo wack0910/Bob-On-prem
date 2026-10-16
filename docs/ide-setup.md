@@ -37,6 +37,12 @@ Bob IDE에서 **Settings → General → Open settings file**을 열고 `setting
 
 설정을 저장하고 IDE를 완전히 종료한 뒤 다시 실행합니다.
 
+### 모델 변경 후
+
+Bob Gateway 주소가 그대로라면 Laguna에서 Qwen으로 변경해도 `gatewayUrl`을 새 vLLM 주소로 바꾸지 않습니다. IDE는 계속 Bob Gateway에 접속하고 backend 모델 선택은 서버 설정에서 바뀝니다. 인증서와 IDP 계정도 모델 교체만으로 변경할 필요가 생기지는 않습니다.
+
+기존 alias metadata를 사용하는 임시 호환 설정에서는 UI의 모델 표시가 실제 Qwen과 다를 수 있습니다. 운영자는 Bob의 적용 설정과 vLLM 요청 model ID를 대조해 실제 대상을 확인합니다. [모델 변경](model-switch.md)을 참고하세요.
+
 ## 5. 로그인 및 기능 확인
 
 1. 조직 IDP에서 발급된 테스트 계정으로 로그인합니다.
@@ -45,3 +51,5 @@ Bob IDE에서 **Settings → General → Open settings file**을 열고 `setting
 4. 문제가 있으면 시간을 기록하고 운영자에게 inference 및 Gateway 로그의 해당 구간을 확인하도록 요청합니다. 로그를 공유할 때 토큰, 이메일, URL의 사내 호스트명, 사용자 코드/프롬프트는 마스킹합니다.
 
 정상 로그인은 IDE와 IDP 연결만 확인합니다. 모델 추론 성공은 별도로 검증해야 합니다.
+
+Qwen 변경 후에는 [모델 검증](model-validation.md)에 따라 짧은 채팅 외에 코드 작업, 승인된 테스트 파일을 사용하는 도구 호출, streaming 응답도 확인합니다.

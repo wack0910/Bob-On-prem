@@ -19,3 +19,9 @@ model-gateway.yaml
 !.env.example
 ibm-bob-install-*.tgz
 work/
+
+# Private configuration copies, backups and validation outputs.
+.private/
+private-backups/
+*.local.yaml
+*.local.yml

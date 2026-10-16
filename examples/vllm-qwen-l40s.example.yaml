@@ -1,0 +1,20 @@
+# vLLM 0.31.0, one L40S: 128K trial profile, not a measured production config.
+# Replace paths/bind address in a private copy and verify capacity and quality.
+model: "<LOCAL_QWEN_FP8_CHECKPOINT_DIRECTORY>"
+served-model-name: "Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8"
+host: "<BIND_ADDRESS>"
+port: 8000
+
+dtype: auto
+tensor-parallel-size: 1
+max-model-len: 131072
+gpu-memory-utilization: 0.90
+kv-cache-dtype: fp8
+max-num-seqs: 1
+max-num-batched-tokens: 2048
+enable-chunked-prefill: true
+enable-prefix-caching: true
+
+enable-auto-tool-choice: true
+tool-call-parser: qwen3_xml
+generation-config: vllm

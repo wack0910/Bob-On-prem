@@ -4,6 +4,8 @@
 
 이 문서는 온라인 OpenShift Container Platform 클러스터에 IBM Bob 2.0.0을 배포하고, 조직의 IDP와 외부 OpenAI 호환 vLLM 서비스를 연결하는 절차를 설명합니다. 참조 설치는 OCP 4.20.36에서 수행됐습니다. 다른 제품·클러스터 버전에서는 배포 번들에 포함된 템플릿과 IBM 문서를 우선 확인하세요.
 
+최초 설치 문서의 Laguna는 과거 성공 이력입니다. 현재 변경 기준은 Qwen3-Coder-30B-A3B-Instruct-FP8 / L40S 1장 / vLLM 0.31.0이며, 새 구성과 검증 절차는 [모델 변경 가이드](model-switch.md)를 함께 사용합니다.
+
 에어갭 설치, 레지스트리 미러링, 프라이빗 인증서 발급 절차는 다루지 않습니다.
 
 ## 2. 구성 흐름
@@ -45,9 +47,10 @@ jq --version
 모델 endpoint 확인 (내부 주소와 모델 ID는 승인된 값으로 대체):
 
 ```bash
+set -o pipefail
 curl --fail --silent --show-error \
   "<VLLM_BASE_URL>/v1/models" |
-  jq '.data[] | {id, max_model_len}'
+  jq '.data[] | {id, max_model_len: (.max_model_len // "not_exposed")}'
 ```
 
 여기에 실제 내부 URL, IP 또는 토큰이 포함된 명령 출력은 저장소에 추가하지 마세요.
@@ -150,29 +153,28 @@ oc get bobidp "<BOB_IDP_RESOURCE>" -n ibm-bob -o yaml
 
 ## 9. 외부 모델 Gateway 설정
 
-외부 vLLM이 OpenAI 호환 API를 제공해야 합니다. 참조 설치 문서에서 기록한 모델은 `poolside/Laguna-XS-2.1-INT4`이며 당시 vLLM 설정은 `max_model_len: 16384`였습니다. 실제 endpoint와 최대 길이는 서버 설정에서 다시 확인하세요.
+외부 vLLM이 OpenAI 호환 API를 제공해야 합니다. 아래 두 시점의 설정을 섞지 않습니다.
 
-참조 설정에서 Bob에 노출한 이름은 `premium-ide`, `security`, `background`였고, 당시 model metadata는 다음과 같았습니다.
+| 항목 | 최초 설치 이력 | 현재 Qwen 변경 기준 |
+|---|---|---|
+| 실제 모델 | `poolside/Laguna-XS-2.1-INT4` | `Qwen/Qwen3-Coder-30B-A3B-Instruct-FP8` |
+| vLLM 총 context | `16384` | `131072` 목표, GPU profiling/요청 검증 필요 |
+| Bob 입력/출력 | `12288` / `2048` | 변경 시점 자료: `114688` / `8192`, 최종 적용값 재확인 |
+| Bob metadata | `poolside / laguna / s2.1` | native Qwen tuple 거부 관찰. 호환 metadata 경로는 별도 검증 |
 
-| 필드 | 참조 값 |
-|---|---|
-| `provider` | `poolside` |
-| `family` | `laguna` |
-| `version` | `s2.1` |
-| `max_input_tokens` | `12288` |
-| `max_output_tokens` | `2048` |
-| `supports_vision` | `false` |
-| `mode` | `chat` |
+Bob 논리 이름 `premium-ide`, `security`, `background`는 유지하면서 `openai_compatible.model`을 새 vLLM ID와 일치시킵니다. `model_info`는 Bob alias table에서 인정되는 값이어야 하며, 현재 관찰된 Qwen 등록 실패를 무시하고 native tuple을 복사하지 않습니다.
 
-`provider`, `family`, `version` 조합은 Bob의 alias table과 일치해야 합니다. 실제 model metadata 형식은 제품 버전별 구성 문서를 따릅니다. API 인증이 필요한 환경에서는 자격 증명을 보호된 secret 경로로 주입하고, 실제 key를 YAML·Git·로그에 넣지 마세요.
+전체 YAML과 각 필드의 이유는 [모델 변경](model-switch.md), vLLM 파라미터는 [vLLM 설정](vllm-configuration.md)을 따릅니다. 기존 성공 이력의 metadata를 Qwen 연결에 재사용하는 예제는 임시 호환 후보이며 공식 Qwen 등록이나 실제 성공 결과로 간주하지 않습니다.
 
-Gateway 설정 파일은 배포 번들의 지원 문법에 맞게 Bastion에서 생성합니다. 예시 구성에는 실제 endpoint·API key를 넣지 않습니다. 파일을 적용한 뒤 inference deployment를 재시작하고 rollout을 확인합니다.
+새 vLLM을 먼저 검증한 뒤 Bob의 지원되는 구성 경로로 반영합니다. 실제 endpoint·API key가 들어간 파일은 Bastion의 보호된 경로에만 둡니다.
 
 ```bash
 ./bobctl update-model-config --model-config "<PROTECTED_MODEL_CONFIG_PATH>"
 oc rollout restart deployment/bob-inference -n ibm-bob
-oc rollout status deployment/bob-inference -n ibm-bob
+oc rollout status deployment/bob-inference -n ibm-bob --timeout=10m
 ```
+
+자동 rollout 여부와 이전 설정 복원까지 포함한 절차는 [Deployment 반영·복구](deployment-rollout.md)를 참고합니다.
 
 ## 10. 완료 기준
 
